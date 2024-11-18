@@ -12,7 +12,7 @@ builder.Services.AddRazorComponents()
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContextFactory<Context>(Options => Options.UseSqlServer(ConStr));
 builder.Services.AddBlazorBootstrap();
-builder.Services.AddScoped<RegistroServices>();
+builder.Services.AddScoped<RegistroComboServices>();
 
 
 var app = builder.Build();

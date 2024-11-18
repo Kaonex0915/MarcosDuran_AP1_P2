@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace MarcosDuran_AP1_P2.Services
 {
-    public class RegistroServices(IDbContextFactory<Context> DbFactory)
+    public class RegistroComboServices(IDbContextFactory<Context> DbFactory)
     {/*
         public async Task<bool> Existe(int RegistroId)
         {
