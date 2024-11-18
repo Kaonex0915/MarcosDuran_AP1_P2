@@ -1,6 +1,8 @@
 using MarcosDuran_AP1_P2.Components;
 using MarcosDuran_AP1_P2.DAL;
+using MarcosDuran_AP1_P2.Services;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContextFactory<Context>(Options => Options.UseSqlServer(ConStr));
+builder.Services.AddBlazorBootstrap();
+builder.Services.AddScoped<RegistroServices>();
+
 
 var app = builder.Build();
 
