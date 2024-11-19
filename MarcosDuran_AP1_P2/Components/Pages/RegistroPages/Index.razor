@@ -1,6 +1,6 @@
 ﻿@page "/Index"
 @rendermode InteractiveServer
-@inject RegistroServices registroServices
+@inject RegistroComboServices registroComboServices
 @inject ToastService notifications
 
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
@@ -8,7 +8,7 @@
 <EditForm Model="L_Registro" class="border shadow-lg p-3 rounded">    
     
     <div class="card-header bg-primary text-white text-center py-2 rounded">
-        <h3 style="font-weight: bold;" class="mb-0 font-weight-bold">Consulta</h3>
+        <h3 style="font-weight: bold;" class="mb-0 font-weight-bold">Consulta Combo</h3>
     </div>
     <div class="card-body">        
 
@@ -29,7 +29,7 @@
                         <span class="bi bi-search"></span> Buscar
                     </button>
                     <button @onclick="Notificacion" class="btn btn-outline-primary" type="button">
-                        <span class="bi bi-search"></span> notificame
+                        <span class="bi bi-search"></span> Notificame
                     </button>
                 </div>
             </div>
@@ -42,8 +42,8 @@
     <table class="table table-bordered text-center">
         <thead class="bg-primary text-white">
             <tr>
-                <th>ID de Registro</th>
-                <th>Nombres</th>
+                <th>ID de Combo</th>
+                <th>Decripcion</th>
                 <th>Detalle</th>
                 <th>Editar</th>
                 <th>Eliminar</th>
@@ -53,23 +53,23 @@
             @foreach (var registro in L_Registro)
             {              
                 <tr>
-                    <td>@registro.RegistroId</td>
-                    <td>@registro.Nombres</td>
+                    <td>@registro.ComboId</td>
+                    <td>@registro.Descripcion</td>
 
                     <td>
-                        <a class="btn btn-outline-primary" href="/Detail/@registro.RegistroId">
+                        <a class="btn btn-outline-primary" href="/Detail/@registro.ComboId">
                             <span class="bi bi-card-heading fs-5"></span>
                         </a>
                     </td>
 
                     <td>
-                        <a class="btn btn-outline-success" href="/Edit/@registro.RegistroId">
+                        <a class="btn btn-outline-success" href="/Edit/@registro.ComboId">
                             <span class="bi bi-pencil fs-5"></span>
                         </a>
                     </td>
 
                     <td>
-                        <a class="btn btn-rojo" href="/Delete/@registro.RegistroId">
+                        <a class="btn btn-rojo" href="/Delete/@registro.ComboId">
                             <span class="bi bi-trash fs-5"></span>
                         </a>
                     </td>
@@ -79,7 +79,7 @@
     </table>
 </EditForm>
 @code {
-    public List<Registro> L_Registro = new List<Registro>();
+    public List<RegistroCombo> L_Registro = new List<RegistroCombo>();
 
     private string filtro = "Id";
     private string valorFiltro = "";
@@ -92,6 +92,5 @@
     private void Notificacion()
     {
     notifications.Notify(new(ToastType.Danger,"Notificacion de prueba "));
-
     }
 }
