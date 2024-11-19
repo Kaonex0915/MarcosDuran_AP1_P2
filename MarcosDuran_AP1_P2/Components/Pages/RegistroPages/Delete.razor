@@ -1,6 +1,95 @@
 ﻿@page "/Delete"
-<h3>Delete</h3>
+@page "/Delete/{ComboId:int}"
+@inject RegistroComboServices registroComboService
+@inject NavigationManager navigationManager
+
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar Combo</PageTitle>
+
+@if (combos != null)
+{
+    <div class="container">
+        <div class="card shadow-header">
+            <div class="card-header  bg-primary text-white text-center py-2 rounded">
+                <h3><strong>Eliminar combo</strong></h3>
+            </div>
+            <div class="card-header">
+                <h3 class="text-danger">¿Seguro de que quieres eliminar este combo?</h3>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow-lg">
+                            <div class="card-header">
+                                <h3 class="text-center"><strong>Datos del combo</strong></h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="border-primary border-2 borde">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <ul class="list-unstyled">
+                                                    <li><strong>ComboId:</strong> @combos.ComboId</li>
+                                                    <li><strong>Fecha:</strong> @combos.Fecha</li>
+                                                    <li><strong>Descripcion:</strong> @combos.Descripcion</li>
+                                                    <li><strong>Monto:</strong> @combos.Precio</li>
+                                                    @foreach (var detalle in Lista_CombosDetalles)
+                                                    {
+                                                        <li><strong>Articulo: </strong>@detalle.Articulos.Descripcion</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-danger" @onclick="Eliminar"><i class="bi bi-trash-fill"></i> Eliminar</button>
+                <button type="button" class="btn btn-outline-primary" @onclick="Volver"><i class="bi bi-box-arrow-left"></i> Volver</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No se halló el trabajo.</p>
+}
 
 @code {
+    [Parameter]
+    public int ComboId { get; set; }
+    public RegistroCombo? combos { get; set; } = new RegistroCombo();
+    public List<RegistroComboDetalle> Lista_CombosDetalles { get; set; } = new List<RegistroComboDetalle>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (ComboId != 0)
+        {
+            combos = await registroComboService.Buscar(ComboId);
+            
+        }
+    }
+
+    public async Task Eliminar()
+    {
+        if (ComboId == 0 || combos == null)
+        {
+            return;
+        }
+
+        if (await registroComboService.Eliminar(ComboId))
+        {
+            Volver();
+        }
+    }
+
+    public void Volver()
+    {
+        navigationManager.NavigateTo("/Index");
+    }
 }
