@@ -8,41 +8,34 @@ using System.Linq.Expressions;
 namespace MarcosDuran_AP1_P2.Services
 {
     public class RegistroComboServices(IDbContextFactory<Context> DbFactory)
-    {/*
-        public async Task<bool> Existe(int RegistroId)
+    {
+        private readonly Context _context;
+        public async Task<bool> Existe(int RegistroComboId)
         {
+            await using var _context = await DbFactory.CreateDbContextAsync();
+            return await _context.RegistroCombo.AnyAsync(c => c.ComboId == RegistroComboId);
           
         }
 
-        public async Task<bool> Insertar(Registro registro)
-        {
-      
-        }
-
-        public async Task<bool> Modificar(Registro registro)
+        public async Task<bool> Modificar(RegistroCombo registroCombo)
         {
         }
 
-        public async Task<bool> Guardar(Registro registro)
+        public async Task<bool> Guardar(RegistroCombo registroCombo)
         {
 
         }
 
-        public async Task<bool> Eliminar(int RegistroId)
+        public async Task<bool> Eliminar(int ComboId)
         {
 
         }
 
-        public async Task<Registro> Buscar(int RegistroId)
+        public async Task<Registro> Buscar(int CombooId)
         {
 
         }
-
         public async Task<List<Registro>> Listar(Expression<Func<Registro, bool>> criterio)
         {
 
         }
-        */
-    }
-
-}

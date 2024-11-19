@@ -9,9 +9,9 @@ public class Articulos
 
     public string? Descripcion { get; set; }
 
-    public decimal Costo { get; set; }
+    public int Costo { get; set; }
 
-    public decimal Precio { get; set; }
+    public int Precio { get; set; }
 
     public int Existencia { get; set; }
 }
