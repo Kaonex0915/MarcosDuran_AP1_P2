@@ -12,12 +12,18 @@ public class RegistroComboDetalle
     public int ComboId { get; set; }
 
     [ForeignKey("ComboId")]
+    public RegistroCombo? registroCombo { get; set; }
 
     public int ArticuloId { get; set; }
+
     [ForeignKey("ArticuloId")]
+    public Articulos? Articulos { get; set; }
+
     public int Cantidad { get; set; }
 
     public int Costo { get; set; }
 
-    public ICollection<RegistroCombo> RegistroCombos { get; set; } = new List<RegistroCombo>();
+    public ICollection<RegistroCombo> registroComboDetalle { get; set; } = new List<RegistroCombo>();
 }
+
+
