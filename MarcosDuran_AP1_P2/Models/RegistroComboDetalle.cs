@@ -23,7 +23,6 @@ public class RegistroComboDetalle
 
     public int Costo { get; set; }
 
-    public ICollection<RegistroCombo> registroComboDetalle { get; set; } = new List<RegistroCombo>();
 }
 
 

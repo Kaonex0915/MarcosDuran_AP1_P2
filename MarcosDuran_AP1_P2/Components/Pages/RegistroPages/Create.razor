@@ -1,1 +1,180 @@
-﻿
+﻿@page "/Create"
+@inject RegistroComboServices registroComboService
+
+@rendermode InteractiveServer
+
+<EditForm Model="combos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card shadow-lg border-0 rounded" style="background-color: #f8f9fa;">
+        <div class="card-header bg-primary text-white" style="text-align: center;">
+            <h3> <i class="fas fa-clipboard-list"></i> Registro de Combos</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="ComboId" class="form-label">ComboId:</label>
+                    <div class="input-group">
+                        <div class=" sizeid">
+                            <InputNumber @bind-Value="combos.ComboId" class="form-control" style="font-size: 0.8em;" aria-describedby="BotonBuscar" />
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="mb-3">
+                <label for="Fecha" class="form-label">Fecha:</label>
+                <InputDate @bind-Value="combos.Fecha" class="form-control" />
+                <ValidationMessage For="@(() => combos.Fecha)" />
+            </div>
+
+
+            <div class="mb-3">
+                <label for="Observaciones" class="form-label">Observaci&oacute;n:</label>
+                <InputText @bind-Value="combos.Descripcion" class="form-control" />
+                <ValidationMessage For="@(() => combos.Descripcion)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Monto" class="form-label">Precio:</label>
+                <InputNumber @bind-Value="combos.Precio" class="form-control" />
+                <ValidationMessage For="@(() => combos.Precio)" />
+            </div>
+            <fieldset class="border-success border border-1">
+                <h3>Articulos</h3>
+                <div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label>Articulos</label>
+                            <div class="input-group mb-3">
+                                <InputSelect class="form-select" @bind-Value="articuloSeleccionado">
+                                    <option value="0" disabled selected>Seleccione un articulo</option>
+                                    @foreach (var articulo in Lista_Articulos)
+                                    {
+                                        <option value="@articulo.ArticuloId">@articulo.Descripcion</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <label>Cantidad</label>
+                            <div class="input-group mb-3">
+                                <InputNumber @bind-Value="combosDetalle.Cantidad" class="form-control"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <label>Precio</label>
+                            <div class="input-group mb-3">
+                                <InputNumber @bind-Value="combosDetalle.Costo" class="form-control"></InputNumber>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <button type="button" @onclick="AgregarDetalle" class="btn btn-outline-primary"><i class="bi bi-plus">Agregar</i></button>
+                        </div>
+
+
+                    </div>
+
+                    <br>
+                    <table class="table table-bordered table-light m-1">
+                        <thead class="thead">
+                            <tr class="table">
+                                <th>Articulo Id</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var trabajoDetalles in Lista_CombosDetalle)
+                            {
+                                <tr>
+                                    <td>@trabajoDetalles.ArticuloId</td>
+                                    <td>@trabajoDetalles.Cantidad</td>
+                                    <td>@trabajoDetalles.Costo</td>
+                                    <td><button @onclick="@(() => RemoverDetalle(trabajoDetalles))" class="btn btn-outline-danger" type="button"><i class="bi bi-trash">Eliminar</i></button></td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="card-footer bg-light d-flex justify-content-center mt-3">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
+                <button type="submit" class="btn btn-outline-success ml-2"><span class="bi bi-check-circle-fill"></span> Guardar </button>
+                <a type="button" href="/Cotizaciones/Index/" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    public RegistroCombo combos { get; set; } = new RegistroCombo();
+    private bool Existe = false;
+    public int articuloSeleccionado { get; set; }
+    public RegistroComboDetalle combosDetalle { get; set; } = new RegistroComboDetalle();
+    public List<RegistroComboDetalle> Lista_CombosDetalle { get; set; } = new List<RegistroComboDetalle>();
+    public List<Articulos> Lista_Articulos { get; set; } = new List<Articulos>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Lista_Articulos = await registroComboService.GetArticulos();
+    }
+
+    public void Nuevo()
+    {
+        combos = new RegistroCombo();
+        Existe = false;
+    }
+
+    public async Task Guardar()
+    {
+        combos.registroComboDetalle = Lista_CombosDetalle;
+        var guardo = await registroComboService.Guardar(combos);
+        if (guardo)
+        {
+            Nuevo();
+        }
+    }
+
+    public void AgregarDetalle()
+    {
+        var seleccionArticulo = Lista_Articulos
+        .FirstOrDefault(a => a.ArticuloId == articuloSeleccionado);
+
+        if (seleccionArticulo != null && combosDetalle.Cantidad > 0)
+        {
+            combosDetalle.Costo = seleccionArticulo.Precio;
+
+            var detalleNuevo = new RegistroComboDetalle
+                {
+                    ArticuloId = seleccionArticulo.ArticuloId,
+                    Cantidad = combosDetalle.Cantidad,
+                    Costo = seleccionArticulo.Costo
+                };
+
+
+            Lista_CombosDetalle.Add(detalleNuevo);
+            combosDetalle = new RegistroComboDetalle();
+            articuloSeleccionado = 0;
+        }
+    }
+
+    public void RemoverDetalle(RegistroComboDetalle detalleRemover)
+    {
+        Lista_CombosDetalle.Remove(detalleRemover);
+
+
+        articuloSeleccionado = detalleRemover.ArticuloId;
+        combosDetalle.Cantidad = detalleRemover.Cantidad;
+        combosDetalle.Costo = detalleRemover.Costo;
+
+    }
+}
