@@ -5,8 +5,8 @@
 
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
-<EditForm Model="L_Registro" class="border shadow-lg p-3 rounded">    
-    
+<EditForm Model="ListaCombos" class="border shadow-lg p-3 rounded">
+
     <div class="card-header bg-primary text-white text-center py-2 rounded">
         <h3 style="font-weight: bold;" class="mb-0 font-weight-bold">Consulta Combo</h3>
     </div>
@@ -17,8 +17,8 @@
                 <label for="Filtro" class="form-label">Filtrar por:</label>
                 <select @bind="filtro" class="form-select">
                     <option value="id">ID</option>
-                    <option value="Nombres">Nombres</option>
- 
+                    <option value="descripcion">Descripcion</option>
+                    <option value="precio">Precio</option>
                 </select>
             </div>
             <div class="col-md-6">
@@ -50,7 +50,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var registro in L_Registro)
+            @foreach (var registro in ListaCombos)
             {              
                 <tr>
                     <td>@registro.ComboId</td>
@@ -79,14 +79,44 @@
     </table>
 </EditForm>
 @code {
-    public List<RegistroCombo> L_Registro = new List<RegistroCombo>();
+    public RegistroCombo Combo = new RegistroCombo();
 
-    private string filtro = "Id";
-    private string valorFiltro = "";
+    public List<RegistroCombo> ListaCombos = new List<RegistroCombo>();
+
+    private string filtro { get; set; } = "Id";
+    private string valorFiltro { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaCombos = await registroComboServices.Listar(t => true);
+    }
+
+    public async Task Guardar()
+    {
+        var guardo = await registroComboServices.Guardar(Combo);
+    }
 
     private async Task Buscar()
     {
-
+        if (valorFiltro.Trim() != "")
+        {
+            if (filtro == "id" && int.TryParse(valorFiltro, out int ComboId))
+            {
+                ListaCombos = await registroComboServices.Listar(t => t.ComboId == ComboId);
+            }
+            else if (filtro == "descripcion")
+            {
+                ListaCombos = await registroComboServices.Listar(t => t.Descripcion == valorFiltro);
+            }
+            else if (filtro == "precio" && int.TryParse(valorFiltro, out int Precio))
+            {
+                ListaCombos = await registroComboServices.Listar(t => t.Precio == Precio);
+            }
+        }
+        else
+        {
+            ListaCombos = await registroComboServices.Listar(t => true);
+        }
     }
 
     private void Notificacion()
