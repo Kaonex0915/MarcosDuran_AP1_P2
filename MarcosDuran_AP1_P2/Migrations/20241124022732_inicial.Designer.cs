@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarcosDuran_AP1_P2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241118231855_CambioModelos")]
-    partial class CambioModelos
+    [Migration("20241124022732_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -118,15 +118,10 @@ namespace MarcosDuran_AP1_P2.Migrations
                     b.Property<int>("Precio")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RegistroComboDetalleDetalleId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Vendido")
                         .HasColumnType("bit");
 
                     b.HasKey("ComboId");
-
-                    b.HasIndex("RegistroComboDetalleDetalleId");
 
                     b.ToTable("RegistroCombo");
 
@@ -190,19 +185,35 @@ namespace MarcosDuran_AP1_P2.Migrations
 
                     b.HasKey("DetalleId");
 
-                    b.ToTable("RegistroComboDetalle");
-                });
+                    b.HasIndex("ArticuloId");
 
-            modelBuilder.Entity("MarcosDuran_AP1_P2.Models.RegistroCombo", b =>
-                {
-                    b.HasOne("MarcosDuran_AP1_P2.Models.RegistroComboDetalle", null)
-                        .WithMany("comboDetalle")
-                        .HasForeignKey("RegistroComboDetalleDetalleId");
+                    b.HasIndex("ComboId");
+
+                    b.ToTable("RegistroComboDetalle");
                 });
 
             modelBuilder.Entity("MarcosDuran_AP1_P2.Models.RegistroComboDetalle", b =>
                 {
-                    b.Navigation("comboDetalle");
+                    b.HasOne("MarcosDuran_AP1_P2.Models.Articulos", "Articulos")
+                        .WithMany()
+                        .HasForeignKey("ArticuloId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MarcosDuran_AP1_P2.Models.RegistroCombo", "registroCombo")
+                        .WithMany("registroComboDetalle")
+                        .HasForeignKey("ComboId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Articulos");
+
+                    b.Navigation("registroCombo");
+                });
+
+            modelBuilder.Entity("MarcosDuran_AP1_P2.Models.RegistroCombo", b =>
+                {
+                    b.Navigation("registroComboDetalle");
                 });
 #pragma warning restore 612, 618
         }

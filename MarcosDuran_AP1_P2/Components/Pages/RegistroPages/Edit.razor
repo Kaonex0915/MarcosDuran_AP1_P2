@@ -2,6 +2,7 @@
 @inject ToastService notifications
 @inject RegistroComboServices registroComboService
 @rendermode InteractiveServer
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 <EditForm Model="combo" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
