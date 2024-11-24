@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using MarcosDuran_AP1_P2.Models;
 
 
 namespace MarcosDuran_AP1_P2.Models
@@ -18,8 +17,5 @@ namespace MarcosDuran_AP1_P2.Models
         public bool Vendido { get; set; }
 
         public ICollection<RegistroComboDetalle> registroComboDetalle { get; set; } = new List<RegistroComboDetalle>();
-
     }
-
-
 }

@@ -10,7 +10,7 @@
     <div class="card-header bg-primary text-white text-center py-2 rounded">
         <h3 style="font-weight: bold;" class="mb-0 font-weight-bold">Consulta Combo</h3>
     </div>
-    <div class="card-body">        
+    <div class="card-body">
 
         <div class="row mb-3 align-items-end">
             <div class="col-md-3">
@@ -44,6 +44,7 @@
             <tr>
                 <th>ID de Combo</th>
                 <th>Decripcion</th>
+                <th>Precio</th>
                 <th>Detalle</th>
                 <th>Editar</th>
                 <th>Eliminar</th>
@@ -51,13 +52,14 @@
         </thead>
         <tbody>
             @foreach (var registro in ListaCombos)
-            {              
+            {
                 <tr>
                     <td>@registro.ComboId</td>
                     <td>@registro.Descripcion</td>
+                    <td>@registro.Precio</td>
 
                     <td>
-                        <a class="btn btn-outline-primary" href="/Detail/@registro.ComboId">
+                        <a class="btn btn-outline-primary" href="/Details/@registro.ComboId">
                             <span class="bi bi-card-heading fs-5"></span>
                         </a>
                     </td>
@@ -69,7 +71,7 @@
                     </td>
 
                     <td>
-                        <a class="btn btn-rojo" href="/Delete/@registro.ComboId">
+                        <a class="btn btn-outline-danger" href="/Delete/@registro.ComboId">
                             <span class="bi bi-trash fs-5"></span>
                         </a>
                     </td>
@@ -94,6 +96,7 @@
     public async Task Guardar()
     {
         var guardo = await registroComboServices.Guardar(Combo);
+        notifications.Notify(new(ToastType.Success, "Se Guardo correctamente"));
     }
 
     private async Task Buscar()
@@ -121,6 +124,6 @@
 
     private void Notificacion()
     {
-    notifications.Notify(new(ToastType.Danger,"Notificacion de prueba "));
+        notifications.Notify(new(ToastType.Danger, "Notificacion de prueba "));
     }
 }

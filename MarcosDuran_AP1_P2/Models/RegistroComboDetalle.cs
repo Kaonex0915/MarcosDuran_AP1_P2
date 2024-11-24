@@ -24,5 +24,3 @@ public class RegistroComboDetalle
     public int Costo { get; set; }
 
 }
-
-

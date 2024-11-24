@@ -1,6 +1,7 @@
 ﻿@page "/Details"
 @page "/Details/{ComboId:int}"
 @inject RegistroComboServices registroComboService
+@inject ToastService notifications
 
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
@@ -41,7 +42,7 @@
 }
 else
 {
-    <p>No se halla el trabajo.</p>
+    <p>No se halló el trabajo.</p>
 }
 
 @code {
@@ -53,6 +54,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         combos = await registroComboService.Buscar(ComboId);
+
     }
 
     public void Volver()
@@ -60,3 +62,4 @@ else
         navigationManager.NavigateTo("/Index");
     }
 }
+

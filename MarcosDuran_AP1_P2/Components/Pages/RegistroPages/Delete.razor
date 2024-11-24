@@ -2,6 +2,7 @@
 @page "/Delete/{ComboId:int}"
 @inject RegistroComboServices registroComboService
 @inject NavigationManager navigationManager
+@inject ToastService notifications
 
 @rendermode InteractiveServer
 
@@ -11,12 +12,14 @@
 {
     <div class="container">
         <div class="card shadow-header">
+
             <div class="card-header  bg-primary text-white text-center py-2 rounded">
                 <h3><strong>Eliminar combo</strong></h3>
             </div>
             <div class="card-header">
                 <h3 class="text-danger">¿Seguro de que quieres eliminar este combo?</h3>
             </div>
+
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
@@ -48,6 +51,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="card-footer">
                 <button type="button" class="btn btn-outline-danger" @onclick="Eliminar"><i class="bi bi-trash-fill"></i> Eliminar</button>
                 <button type="button" class="btn btn-outline-primary" @onclick="Volver"><i class="bi bi-box-arrow-left"></i> Volver</button>
@@ -71,7 +75,7 @@ else
         if (ComboId != 0)
         {
             combos = await registroComboService.Buscar(ComboId);
-            
+
         }
     }
 
@@ -86,6 +90,7 @@ else
         {
             Volver();
         }
+        notifications.Notify(new(ToastType.Danger, "Combo Eliminado"));
     }
 
     public void Volver()
@@ -93,3 +98,4 @@ else
         navigationManager.NavigateTo("/Index");
     }
 }
+

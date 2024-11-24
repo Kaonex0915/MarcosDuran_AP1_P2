@@ -1,5 +1,5 @@
 ﻿@page "/Edit/{ComboId:int}"
-
+@inject ToastService notifications
 @inject RegistroComboServices registroComboService
 @rendermode InteractiveServer
 
@@ -11,7 +11,7 @@
         </div>
 
         <div class="card-body">
-           
+
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="ComboId" class="form-label">ComboId:</label>
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-           
+
             <div class="mb-3">
                 <label for="Fecha" class="form-label">Fecha:</label>
                 <InputDate @bind-Value="combo.Fecha" class="form-control" />
@@ -31,14 +31,14 @@
             </div>
 
 
-           
+
             <div class="mb-3">
                 <label for="Descripcion" class="form-label">Descripcion:</label>
                 <InputText @bind-Value="combo.Descripcion" class="form-control" />
                 <ValidationMessage For="@(() => combo.Descripcion)" />
             </div>
 
-            
+
             <div class="mb-3">
                 <label for="Monto" class="form-label">Monto:</label>
                 <InputNumber @bind-Value="combo.Precio" class="form-control" />
@@ -115,7 +115,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
                 <button type="submit" class="btn btn-outline-success ml-2"><span class="bi bi-check-circle-fill"></span> Guardar </button>
-                <a type="button" href="/Cotizaciones/Index/" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
+                <a type="button" href="/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
             </div>
         </div>
     </div>
@@ -166,11 +166,13 @@
 
     public async Task Guardar()
     {
+        combo.registroComboDetalle = Lista_CombosDetalle;
         var guardo = await registroComboService.Guardar(combo);
         if (guardo)
         {
             Nuevo();
         }
+        notifications.Notify(new(ToastType.Success, "Se guardaron los cambios satisfactoriamente "));
     }
 
     public async Task Eliminar()
@@ -196,24 +198,28 @@
                     Costo = seleccionArticulo.Costo
                 };
 
-            //combo.Precio += detalleNuevo.Cantidad * detalleNuevo.Costo;
+
             detalleNuevo.ComboId = combo.ComboId;
             Lista_CombosDetalle.Add(detalleNuevo);
             combosDetalle = new RegistroComboDetalle();
             articuloSeleccionado = 0;
         }
+
     }
 
-    public void RemoverDetalle(RegistroComboDetalle detalleRemover)
+    public async Task RemoverDetalle(RegistroComboDetalle detalleRemover)
     {
+
+
+        var detalleEliminado = await registroComboService.EliminarDetalle(detalleRemover.DetalleId);
+
         Lista_CombosDetalle.Remove(detalleRemover);
 
-        //combo.Precio -= detalleRemover.Cantidad * detalleRemover.Costo;
+
 
         articuloSeleccionado = detalleRemover.ArticuloId;
         combosDetalle.Cantidad = detalleRemover.Cantidad;
         combosDetalle.Costo = detalleRemover.Costo;
-
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿@page "/Create"
 @inject RegistroComboServices registroComboService
+@inject ToastService notifications
 
 @rendermode InteractiveServer
 
@@ -11,6 +12,7 @@
         </div>
 
         <div class="card-body">
+
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="ComboId" class="form-label">ComboId:</label>
@@ -20,7 +22,8 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
+
 
             <div class="mb-3">
                 <label for="Fecha" class="form-label">Fecha:</label>
@@ -29,11 +32,13 @@
             </div>
 
 
+
             <div class="mb-3">
                 <label for="Observaciones" class="form-label">Observaci&oacute;n:</label>
                 <InputText @bind-Value="combos.Descripcion" class="form-control" />
                 <ValidationMessage For="@(() => combos.Descripcion)" />
             </div>
+
 
             <div class="mb-3">
                 <label for="Monto" class="form-label">Precio:</label>
@@ -109,7 +114,7 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
                 <button type="submit" class="btn btn-outline-success ml-2"><span class="bi bi-check-circle-fill"></span> Guardar </button>
-                <a type="button" href="/Cotizaciones/Index/" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
+                <a type="button" href="/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
             </div>
         </div>
     </div>
@@ -142,6 +147,7 @@
         {
             Nuevo();
         }
+        notifications.Notify(new(ToastType.Success, "Se Guardo correctamente"));
     }
 
     public void AgregarDetalle()
@@ -161,6 +167,7 @@
                 };
 
 
+
             Lista_CombosDetalle.Add(detalleNuevo);
             combosDetalle = new RegistroComboDetalle();
             articuloSeleccionado = 0;
@@ -170,7 +177,6 @@
     public void RemoverDetalle(RegistroComboDetalle detalleRemover)
     {
         Lista_CombosDetalle.Remove(detalleRemover);
-
 
         articuloSeleccionado = detalleRemover.ArticuloId;
         combosDetalle.Cantidad = detalleRemover.Cantidad;
