@@ -69,11 +69,21 @@
                                 <InputNumber @bind-Value="combosDetalle.Cantidad" class="form-control"></InputNumber>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <label>Precio</label>
-                            <div class="input-group mb-3">
-                                <InputNumber @bind-Value="combosDetalle.Costo" class="form-control"></InputNumber>
+                        <div class="row">
+                            <div class="col-3 mb-3">
+                                <label for="Monto" class="form-label">Monto:</label>
+                                <InputNumber @bind-Value="combo.Precio" class="form-control" />
+                                <ValidationMessage For="@(() => combo.Precio)" />
                             </div>
+
+                            <div class="col">
+                                <InputCheckbox class="form-check-input" type="checkbox" id="checkboxNoLabel" @bind-Value="combo.Vendido" aria-label="..."></InputCheckbox>
+                                <label class="form-check-label" for="comboVendido">
+                                    Combo Vendido
+                                </label>
+                                <ValidationMessage For="@(() => combo.Vendido)" />
+                            </div>
+
                         </div>
 
                         <div class="col">
@@ -138,7 +148,6 @@
         Lista_CombosDetalle = await registroComboService.ListarComboDetalle(ComboId);
         Lista_Articulos = await registroComboService.GetArticulos();
 
-
         combo.ComboId = ComboId;
         await Buscar();
 
@@ -199,7 +208,6 @@
                     Costo = seleccionArticulo.Costo
                 };
 
-
             detalleNuevo.ComboId = combo.ComboId;
             Lista_CombosDetalle.Add(detalleNuevo);
             combosDetalle = new RegistroComboDetalle();
@@ -211,12 +219,9 @@
     public async Task RemoverDetalle(RegistroComboDetalle detalleRemover)
     {
 
-
         var detalleEliminado = await registroComboService.EliminarDetalle(detalleRemover.DetalleId);
 
         Lista_CombosDetalle.Remove(detalleRemover);
-
-
 
         articuloSeleccionado = detalleRemover.ArticuloId;
         combosDetalle.Cantidad = detalleRemover.Cantidad;
